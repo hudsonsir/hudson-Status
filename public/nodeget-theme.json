@@ -1,0 +1,36 @@
+{
+  "name": "Hudson Status",
+  "short": "HudsonStatus",
+  "description": "Hudson Status - 基于 NodeGet 规范的自定义探针主题",
+  "author": "Hudson",
+  "repository": "https://github.com/hudsonsir/hudson-status",
+  "dist_page": "",
+  "user_preferences_form": {
+    "version": "0.0.1",
+    "items": [
+      {
+        "key": "site_name",
+        "name": "站点标题",
+        "type": "string",
+        "default": "Hudson Status",
+        "help": "输入站点标题"
+      },
+      {
+        "key": "site_logo",
+        "name": "站点图标",
+        "type": "string",
+        "default": "/favicon.svg",
+        "help": "输入站点图标链接，留空则使用默认"
+      },
+      {
+        "key": "footer",
+        "name": "页脚文本",
+        "type": "string",
+        "default": "Powered by NodeGet",
+        "help": "输入页脚文本"
+      }
+    ]
+  },
+  "version": "0.0.0",
+  "license": ""
+}

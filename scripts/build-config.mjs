@@ -1,12 +1,36 @@
-/** 构建前：若设置了 SITE_1…，则写入 public/config.json（prebuild 调用）。 */
-
-import { writeFileSync } from 'node:fs'
+/**
+ * postbuild：根据环境变量生成/覆盖 dist/config.json。
+ *
+ * 优先级（从高到低）：
+ *   1. NODEGET_CONFIG    - 完整 JSON 字符串，直接写入
+ *   2. SITE_n + SITE_*   - 兼容旧版的扁平字段写法
+ *   3. 不动已有 dist/config.json
+ */
+import { writeFileSync, existsSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const out = resolve(root, 'public/config.json')
+const distDir = resolve(root, 'dist')
+const out = existsSync(distDir)
+  ? resolve(distDir, 'config.json')
+  : resolve(root, 'public/config.json')
 
+// 1) NODEGET_CONFIG 直接写入
+const raw = process.env.NODEGET_CONFIG?.trim()
+if (raw) {
+  try {
+    const parsed = JSON.parse(raw)
+    writeFileSync(out, JSON.stringify(parsed, null, 2) + '\n')
+    console.log(`[build-config] wrote NODEGET_CONFIG -> ${out}`)
+    process.exit(0)
+  } catch (e) {
+    console.error('[build-config] NODEGET_CONFIG 无法解析为 JSON:', e?.message || e)
+    process.exit(1)
+  }
+}
+
+// 2) 兼容 SITE_n
 function parseSite(raw) {
   const out = {}
   const re = /(\w+)\s*=\s*(?:"((?:[^"\\]|\\.)*)"|([^,]*))(?:\s*,\s*|\s*$)/g
@@ -32,16 +56,18 @@ for (let i = 1; ; i++) {
 }
 
 if (!tokens.length) {
-  console.log('[build-config] no SITE_n env vars, keeping existing public/config.json')
+  console.log(`[build-config] no NODEGET_CONFIG / SITE_n env vars, keeping existing ${out}`)
   process.exit(0)
 }
 
 const config = {
-  site_name: process.env.SITE_NAME || 'NodeGet Status',
-  site_logo: process.env.SITE_LOGO || '',
-  footer: process.env.SITE_FOOTER || 'Powered by NodeGet',
+  user_preferences: {
+    site_name: process.env.SITE_NAME || 'NodeGet Status',
+    site_logo: process.env.SITE_LOGO || '',
+    footer: process.env.SITE_FOOTER || 'Powered by NodeGet',
+  },
   site_tokens: tokens,
 }
 
 writeFileSync(out, JSON.stringify(config, null, 2) + '\n')
-console.log(`[build-config] wrote ${tokens.length} site_tokens to public/config.json`)
+console.log(`[build-config] wrote ${tokens.length} site_tokens -> ${out}`)
