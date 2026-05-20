@@ -1,7 +1,9 @@
 {
   "user_preferences": {
     "site_name": "Hudson Status",
-    "site_logo": "/favicon.svg",
+    "site_title": "Hudson Status",
+    "site_logo": "/logo.svg",
+    "site_favicon": "/favicon.svg",
     "footer": "Powered by NodeGet"
   },
   "site_tokens": [

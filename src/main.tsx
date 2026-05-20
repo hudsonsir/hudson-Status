@@ -8,6 +8,19 @@ import NodehubPage from "./pages/NodehubPage.tsx";
 import BillingPage from "./pages/BillingPage.tsx";
 import "./index.css";
 
+// 动态加载主题自定义资源（NodeGet 规范，运行时注入避免构建期解析）
+(() => {
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = `${base}/custom.css`;
+  document.head.appendChild(link);
+  const script = document.createElement("script");
+  script.src = `${base}/custom.js`;
+  script.defer = true;
+  document.body.appendChild(script);
+})();
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
