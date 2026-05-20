@@ -91,12 +91,16 @@ export interface Node {
 export interface SiteConfig {
   /** 兼容旧版扁平字段 */
   site_name?: string;
+  site_title?: string;
   site_logo?: string;
+  site_favicon?: string;
   footer?: string;
   /** NodeGet 规范：用户偏好统一存放在 user_preferences 下 */
   user_preferences?: {
     site_name?: string;
+    site_title?: string;
     site_logo?: string;
+    site_favicon?: string;
     footer?: string;
     [key: string]: unknown;
   };

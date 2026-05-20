@@ -63,7 +63,9 @@ if (!tokens.length) {
 const config = {
   user_preferences: {
     site_name: process.env.SITE_NAME || 'NodeGet Status',
-    site_logo: process.env.SITE_LOGO || '',
+    site_title: process.env.SITE_TITLE || process.env.SITE_NAME || 'NodeGet Status',
+    site_logo: process.env.SITE_LOGO || '/logo.svg',
+    site_favicon: process.env.SITE_FAVICON || '/favicon.svg',
     footer: process.env.SITE_FOOTER || 'Powered by NodeGet',
   },
   site_tokens: tokens,
